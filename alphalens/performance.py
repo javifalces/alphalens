@@ -13,14 +13,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import pandas as pd
-import numpy as np
 import warnings
 
+import numpy as np
+import pandas as pd
 from pandas.tseries.offsets import BDay
 from scipy import stats
 from statsmodels.regression.linear_model import OLS
 from statsmodels.tools.tools import add_constant
+
 from . import utils
 
 
@@ -202,7 +203,8 @@ def factor_weights(factor_data,
         weights = weights.groupby(level='date').apply(to_weights, False, False)
 
     # preserve freq, which contains trading calendar information
-    weights.index.levels[0].freq = factor_data.index.levels[0].freq
+    # weights.index.levels[0].freq = factor_data.index.levels[0].freq
+    weights.index.levels[0].freq = pd.tseries.frequencies.to_offset(factor_data.index.levels[0].freq)
     return weights
 
 
